@@ -22,11 +22,11 @@ class ABCBrowser(abc.ABC):
     driver: webdriver = None
     waiter: WebDriverWait = None
 
-    def __init__(self, driver_path: Path, driver_option):
-        self._init_driver_(driver_path, driver_option)
+    def __init__(self, driver_path: Path, options: dict):
+        self._init_driver_(driver_path, options)
 
     @abc.abstractmethod
-    def _init_driver_(self, driver_path: Path, driver_options: dict):
+    def _init_driver_(self, driver_path: Path, options: dict):
         pass
 
     def is_ready(self):

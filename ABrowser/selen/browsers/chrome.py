@@ -5,9 +5,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class Chrome(ABCBrowser):
-    def _init_driver_(self, driver_path: Path, driver_option: dict):
+    def _init_driver_(self, driver_path: Path, options: dict):
         chrome_options = webdriver.ChromeOptions()
-        for arg, value in driver_option.items():
+        for arg, value in options.items():
             chrome_options.add_argument(f'{arg}={value}')
         self.driver = webdriver.Chrome(driver_path, options=chrome_options)
         self.waiter = WebDriverWait(self.driver, timeout=30)
