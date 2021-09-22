@@ -20,8 +20,10 @@ setup(
     description=DESCRIPTION,
     long_description=DESCRIPTION,
     packages=find_namespace_packages(include=[PKG, f'{PKG}.*']),
-    entry_points={'console_scripts': [f'{PKG}_console = {PKG}.scripts:ABrowser_console']},
+    entry_points={'console_scripts': [f'{PKG}_console = {PKG}.scripts:ABrowser_console',
+                                      f'{PKG}_drivers = {PKG}.scripts:ABrowser_drivers']},
     install_requires=requirements,
+    package_data={PKG: ['selen/options/*']},
     include_package_data=True,
     python_requires='>=3.7'
 )

@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.remote.webelement import WebElement
 from dataclasses import dataclass
+import abc
 
 
 @dataclass
@@ -17,20 +18,20 @@ class XPath:
     pass
 
 
-class ABrowser:
-    driver: webdriver.Chrome
-    waiter: WebDriverWait
+class ABCBrowser(abc.ABC):
+    driver: webdriver = None
+    waiter: WebDriverWait = None
 
-    def __init__(self, driver_path: Path, incognito=False):
-        user_agent = "Android KitKat", "Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36"
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('user-agent={}'.format(user_agent))
-        if incognito:
-            chrome_options.add_argument('--incognito')
-        self.driver = webdriver.Chrome(driver_path, options=chrome_options)
-        self.waiter = WebDriverWait(self.driver, timeout=30)
+    def __init__(self, driver_path: Path, driver_option):
+        self._init_driver_(driver_path, driver_option)
 
-    # Get when available
+    @abc.abstractmethod
+    def _init_driver_(self, driver_path: Path, driver_options: dict):
+        pass
+
+    def is_ready(self):
+        return self.driver is not None and self.waiter is not None
+
     def get_xpath(self, xpath) -> WebElement:
         return self.waiter.until(ec.visibility_of_element_located((By.XPATH, xpath)))
 
@@ -47,3 +48,6 @@ class ABrowser:
         self.driver.get("about:blank")
         self.driver.delete_all_cookies()
         self.driver.execute_script('localStorage.clear();')
+
+    def close(self):
+        self.driver.quit()
